@@ -1,18 +1,18 @@
-# 🧾 Descripción del uso de la Macro
+# 🎯 ¿Qué hace esta macro?
 
-La macro `BuscarFacturasLMA` busca y cruza información entre un archivo de datos llamado **"Datos Netsuite 2.xlsx"** y otro archivo activo que contiene varias hojas con registros de **órdenes de servicio y facturas**.  
-Su objetivo principal es **llenar automáticamente datos faltantes** (como número de factura, estado, comercial y orden relacionada), y generar un **reporte en un archivo aparte** con los registros que no se pudieron completar correctamente.
+La macro extrae información de **cotizaciones, pedidos y facturas** desde una hoja de Excel (`Prog en Sitio.xlsx`, conectada a NetSuite), cruzándola con datos registrados manualmente en otra hoja (`PROGRAMACION EN SITIO 2022.xlsx`), y genera automáticamente un **reporte estructurado** en un nuevo archivo Excel.
 
----
+# 💡 ¿Por qué es útil?
 
-# ✅ ¿Por qué es útil esta macro?
+Porque:
 
-Esta macro es muy útil para:
-
-- 🔎 Auditoría o seguimiento de órdenes y facturas.  
-- ⚙️ Automatización de procesos administrativos que implican cruce de datos.  
-- 🚨 Identificación rápida de registros incompletos o erróneos.  
-- 📤 Generación de reportes para revisión o envío a terceros (comerciales, financieros, etc).
+- ⚙️ Automatiza un proceso tedioso y repetitivo de comparación y consolidación de datos.
+- 🔄 Permite **cruzar múltiples valores por celda** (por ejemplo, varios pedidos o facturas separados por `/`, `,` o `|`).
+- 📊 Genera un archivo final con toda la **información clave de seguimiento** de la programación en sitio:
+  - Cotizaciones  
+  - Valores cotizados y facturados  
+  - Estado del pedido  
+  - Estado de la factura  
 
 # 📊 Consultas SQL utilizadas
 
@@ -20,7 +20,7 @@ Las consultas SQL se encuentran en la hoja `datos_netsuite2` del archivo **Datos
 A continuación se listan las principales consultas usadas:
 
 <details>
-<summary>🗂 Consulta: Prog en Sitio (Query1)</summary>
+<summary>🗂 Consulta: Ordenes de Venta</summary>
 
 ```sql
 'Consulta basada en Netsuite2.com'
@@ -84,7 +84,7 @@ GROUP BY
 ```
 </details>
 <details>
-<summary>🗂 Consulta: Prog en Sitio (Query2)</summary>
+<summary>🗂 Consulta: Estimaciones Clientes</summary>
 
 ```sql
 'Consulta basada en Netsuite2.com'
@@ -155,7 +155,7 @@ SELECT
 ```
 </details>
 <details>
-<summary>🗂 Consulta: Prog en Sitio (Query3)</summary>
+<summary>🗂 Consulta: Ventas Facturadas</summary>
 
 ```sql
 'Consulta basada en Netsuite2.com'
@@ -230,3 +230,46 @@ SELECT
     HAVING (TRANSACTION_LINES.GROSS_AMOUNT>0)
 ```
 </details>
+
+---
+
+# ⚙️ Consultas Power Query
+
+Las siguientes consultas se encuentran en el directorio:
+
+> 📁 `Fabian/power_query/`
+
+Estas transformaciones extraen y combinan datos desde NetSuite para análisis y generación de reportes.
+
+---
+
+### 🧾 `ventas_facturadas.pq`
+
+📌 **Descripción:**  
+Consulta que obtiene todas las **facturas de venta** registradas en NetSuite, con información detallada sobre valor facturado, estado y fecha de emisión.
+
+---
+
+### 📄 `ordenes_de_venta.pq`
+
+📌 **Descripción:**  
+Consulta que trae todas las **órdenes de venta** generadas, vinculadas a lotes, clientes, estado y tipo de transacción.
+
+---
+
+### 📐 `estimaciones_clientes.pq`
+
+📌 **Descripción:**  
+Filtra y transforma todas las **estimaciones activas** asociadas a clientes, enfocándose en aquellas con valor positivo y dentro del rango del año actual.
+
+---
+
+### 🧩 `cruce_facturas_por_ordenes.pq`
+
+📌 **Descripción:**  
+Consulta final que **combina** los resultados de `ventas_facturadas.pq`, `ordenes_de_venta.pq` y `estimaciones_clientes.pq` mediante relaciones entre lotes y órdenes para construir el **reporte consolidado**.
+
+---
+
+
+

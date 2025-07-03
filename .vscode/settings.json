@@ -1,0 +1,4 @@
+{
+  "plantuml.exportOutDir": "out",
+  "plantuml.exportFormat": "png"
+}
