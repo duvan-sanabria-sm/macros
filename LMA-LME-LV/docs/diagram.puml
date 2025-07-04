@@ -1,0 +1,59 @@
+@startuml
+start
+
+:Desactiva ScreenUpdating;
+
+:¿Archivo 'Datos Netsuite 2.xlsx' está abierto?;
+if (Sí) then (Sí)
+  :Asignar referencia;
+else
+  :Abrir archivo desde ruta;
+endif
+
+:Crear archivo de resultados (LV Reporte...);
+:Asignar archivo 'LMA 2025 GMM-RG-54 CONT SEGUI EQUIP V1.xlsx';
+
+repeat
+  :Recorrer cada hoja mensual;
+
+  repeat
+    :Leer OS (col N) y Factura (col O);
+
+    if (OS = "PEDIDO" o "N/A") then (Sí)
+      :Ignorar fila;
+    else
+      :¿Buscar por OS?;
+      if (Sí) then
+        :Buscar OS en "OS FACTURADA";
+        if (Encontrado) then
+          :Obtener Factura;
+          :Buscar Factura en "FV DE OS";
+          if (Encontrado) then
+            :Obtener Estado y Comercial;
+            :Actualizar columnas O, P, Q;
+          else
+            :Actualizar solo O (factura);
+          endif
+        else
+          :Buscar Factura en "FV DE OS";
+          if (Encontrado) then
+            :Obtener OS, Estado, Comercial;
+            :Actualizar columnas N, P, Q;
+          else
+            :Registrar fila como error;
+          endif
+        endif
+      endif
+    endif
+
+  repeat while (queden filas)
+
+  :Copiar errores al archivo resultado con nombre hoja;
+
+repeat while (queden hojas)
+
+:Cerrar Netsuite y guardar resultados;
+:Activar ScreenUpdating;
+
+stop
+@enduml

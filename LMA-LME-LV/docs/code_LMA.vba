@@ -1,15 +1,3 @@
-## 🔍 Macro BuscarFacturasLMA
-Esta macro cruza datos entre un archivo exportado desde NetSuite y otro archivo activo con órdenes y facturas, completando datos faltantes y generando reportes.
-
-
-## 🚀 ¿Qué hace?
-
-- Busca órdenes de servicio en el archivo `Datos Netsuite 2.xlsx`.
-- Completa columnas como número de factura, estado y comercial.
-- Genera un archivo de reporte con registros no completados.
-
-## 💻 Código Visual Basic
-```visualbasic
 Option Explicit
 Function WokbookOpen(name As String) As Boolean
     Dim xWb As Workbook
@@ -63,7 +51,7 @@ Function crearLibro() As String
     Set libroReporte = ActiveWorkbook
     
     With libroReporte
-        .SaveAs Filename:="C:\Users\duvan.sanabria\OneDrive - Servimeters\Documentos\Macros\LMA -LME - LV\resultados\LMA\LMA Reporte Facturas" & Format(Now(), "DD-MMM-YYYY hh mm AMPM") & ".xlsx"
+        .SaveAs Filename:="\\10.10.10.1\Comunicados\TICS\PROGRAMASEQUIPOSNUEVOS\macros\LMA-LME-LV\resultados\LMA\LMA Reporte Facturas" & Format(Now(), "DD-MMM-YYYY hh mm AMPM") & ".xlsx"
         .Worksheets(1).Range("A1").value = "Nro. Orden"
         .Worksheets(1).Range("B1").value = "Cliente"
         .Worksheets(1).Range("C1").value = "Tipo"
@@ -112,7 +100,7 @@ Sub BuscarFacturasLMA()
     Else
 '        MsgBox "The file is not open", vbInformation, "Kutools for Excel"
         On Error GoTo errorLibro
-        Set excelFacturas = Workbooks.Open("C:\Users\duvan.sanabria\OneDrive - Servimeters\Documentos\Macros\LMA -LME - LV\netsuite\Datos Netsuite 2.xlsx")
+        Set excelFacturas = Workbooks.Open("\\10.10.10.1\Comunicados\TICS\PROGRAMASEQUIPOSNUEVOS\macros\LMA-LME-LV\netsuite\Datos Netsuite 2.xlsx")
     End If
     
     On Error GoTo errorLibroResultados
@@ -548,3 +536,4 @@ errorLibroResultados:
     MsgBox "Error en la hoja de Resultados " & vbCrLf & Err.Description
     End
 End Sub
+
