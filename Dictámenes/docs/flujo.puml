@@ -1,0 +1,44 @@
+@startuml
+title Flujo general de generacion y gestion de dictamenes (Servimeters)
+
+start
+
+:Inicio del proceso de dictamenes;
+
+:Recepcion de carpeta del servidor (con hoja "control de inspeccion" y archivos tipo dictamen);
+
+note right: Ingenieros envian la ruta al servidor donde estan los archivos.
+
+if (Hay mas de un dictamen?) then (Si)
+  :Abrir cada dictamen (1, 2 o 3);
+else (No)
+  :Abrir dictamen unico;
+endif
+
+:Ejecutar macro de ingreso de datos (fecha, lugar, numero de dictamen);
+
+note right: Macro en PERSONAL.XLSB que ajusta texto y formato visual.
+
+if (Existen varias hojas?) then (Si)
+  :Ejecutar macro "Consecutivo" (agrega numero de dictamen a cada hoja);
+endif
+
+:Ejecutar macro "Firma" (agrega firmas automaticas a todas las hojas);
+
+:Exportar dictamen final a PDF;
+
+note right: El PDF incluye logos y formato oficial.
+
+:Ejecutar macro del "Extractor" (extrae datos de la hoja de control);
+
+:Copiar informacion a hoja "REGISTRO DICTAMENES";
+
+:Actualizar hoja "SICERCO" con los datos del dictamen;
+
+note right: Hoja con formato estandarizado para la plataforma Sicerco.
+
+:Guardar archivos finales en carpeta del proyecto;
+
+stop
+
+@enduml

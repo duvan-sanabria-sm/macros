@@ -1,1 +1,16 @@
 **/resultados/*
+
+# Ignorar archivos Excel
+*.xls
+*.xlsx
+*.xlsm
+*.xlsb
+
+# Ignorar archivos temporales de Excel
+~$*.xls
+~$*.xlsx
+~$*.xlsm
+~$*.xlsb
+
+# Ignorar PDFs generados
+*.pdf
