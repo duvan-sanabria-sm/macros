@@ -1,0 +1,65 @@
+@startuml
+start
+
+:Iniciar macro PruebaMacro;
+
+if ("Prog en Sitio.xlsx" esta abierto) then (si)
+  :Usar archivo abierto;
+else (no)
+  :Abrir archivo desde ruta \\\\10.10.10.1\\...;
+endif
+
+:Seleccionar PRIMERA hoja del archivo;
+
+note right
+Solo se usa la primera hoja,
+sin importar el nombre
+end note
+
+:Refrescar todas las consultas (RefreshAll);
+
+:Crear nuevo archivo de resultados;
+:Leer hoja PROGRAMACION EN SITIO 2022;
+:Buscar columna "LOTE";
+
+repeat
+  :Leer valor de celda del lote;
+  :Separar si hay multiples lotes (/, |, ,);
+
+  :Iterar sobre cada lote separado;
+
+  if (Lote encontrado?) then (si)
+    :Buscar en columna A;
+  else (no)
+    :Buscar en columna K como respaldo;
+  endif
+
+  if (Filas encontradas?) then (si)
+    :Extraer datos clave;
+    note right
+    A: Cotizacion
+    C: Cliente
+    D: Rep. Ventas
+    E: Valor Cotizado
+    J: Pedido
+    K: Lote
+    L: Estado Pedido
+    P: Factura
+    Q: Estado Factura
+    R/S: Valor Facturado
+    end note
+
+    if (Varias facturas?) then (si)
+      :Concatenar valores con coma;
+    endif
+
+    :Agregar fila al archivo de resultados;
+  else (no)
+    :Ignorar ese lote;
+  endif
+
+repeat while (Hay filas por procesar?)
+
+:Cerrar libros y guardar resultados;
+stop
+@enduml

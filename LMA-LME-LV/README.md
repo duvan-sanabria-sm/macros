@@ -58,25 +58,29 @@ A continuación se listan las principales consultas usadas:
 ```sql
 -- Consulta basada en Netsuite2.com
 SELECT 
-    t.id AS TRANSACTION_ID,
+    t.id AS ID_Transaccion,
     CASE 
         WHEN t.type = 'CustInvc' THEN 'Factura de venta'
         WHEN t.type = 'SalesOrd' THEN 'Orden de venta'
         ELSE t.type
-    END AS TRANSACTION_TYPE,
-    l.createdfrom AS CREATED_FROM_ID,
-    t.tranDate AS CREATE_DATE,
-    s.entityid AS FULL_NAME,
-    t.tranId AS TRANID,
+    END AS Tipo_Transaccion,
+    
+    l.createdfrom AS ID_Orden_Relacionada,
+    t.tranDate AS Fecha_Creacion,
+    s.entityid AS Nombre_Comercial,
+    t.tranId AS Codigo_Transaccion,
+    
     CASE
         WHEN t.status = 'A' THEN 'Abierta'
         WHEN t.status = 'B' THEN 'Pagado por completo'
         ELSE t.status
-    END AS ESTADO
+    END AS Estado_Factura
+
 FROM transaction AS t
 INNER JOIN transactionLine AS l ON t.id = l.transaction
 LEFT JOIN department AS d ON l.department = d.id
 LEFT JOIN employee AS s ON t.employee = s.id
+
 WHERE 
     t.type = 'CustInvc'
     AND l.createdfrom IN (
@@ -86,6 +90,7 @@ WHERE
         AND t.tranDate >= {ts '2025-01-01 00:00:00'}
         AND t.tranDate < {ts '2026-01-01 00:00:00'}
     )
+
 GROUP BY 
     t.id, t.tranId, l.createdfrom, t.tranDate, s.entityid, t.type, t.status
 ```
@@ -132,14 +137,14 @@ GROUP BY
 
 ```sql
 SELECT  
-    t.id AS TRANSACTION_ID,
-    t.tranId AS TRANID,
+    t.id AS ID_Orden_Venta,
+    t.tranId AS Codigo_Orden_Venta,
     CASE 
         WHEN t.type = 'CustInvc' THEN 'Factura de venta'
         WHEN t.type = 'SalesOrd' THEN 'Orden de venta'
         ELSE t.type
-    END AS TRANSACTION_TYPE,
-    t.tranDate AS CREATE_DATE
+    END AS Tipo_Transaccion,
+    t.tranDate AS Fecha_Creacion_Orden
 FROM transaction t
 WHERE 
     t.type = 'SalesOrd'
@@ -149,8 +154,8 @@ WHERE
         INNER JOIN transaction t2 ON l.transaction = t2.id
         WHERE t2.type = 'CustInvc'
               AND l.createdfrom IS NOT NULL
-               AND t.tranDate >= {ts '2025-01-01 00:00:00'}
-               AND t.tranDate < {ts '2026-01-01 00:00:00'}
+              AND t2.tranDate >= {ts '2025-01-01 00:00:00'}
+              AND t2.tranDate < {ts '2026-01-01 00:00:00'}
     )
 GROUP BY 
     t.id, 
